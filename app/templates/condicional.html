@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso de Datossssaaas</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+   
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            display: block;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        input[type="submit"] {
+            background-color: #000000;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+       
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <script>
+        function confirmarEliminacion(id) {
+            if (confirm('¿Estás seguro de que quieres eliminar este registro?')) {
+                // Aquí interceptas el envío del formulario
+                const form = document.getElementById('eliminar-form-' + id);
+                fetch(form.action, {
+                    method: form.method,
+                    body: new URLSearchParams(new FormData(form))
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.mensaje || 'Eliminado exitosamente');
+                    location.reload(); // Recargar la página después de la eliminación
+                })
+                .catch(error => console.error('Error:', error));
+            }
+            return false; // Evitar el envío normal del formulario
+        }
+    </script>
+    
+</head>
+<body>
+    
+    <form action="{{ url_for('form_bp.procesar_form_view') }}" method="post">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required><br><br>
+        
+        <label for="descripcion">Descripción:</label>
+        <input type="text" id="descripcion" name="descripcion" required><br><br>
+
+        <label for="detalle">Detalle:</label>
+        <input type="text" id="detalle" name="detalle" required><br><br>
+
+        <input type="submit" value="enviar">
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Detalle</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registro in registros %}
+            <tr>
+                <td>{{ registro[0].nombre }}</td>
+                <td>{{ registro[1] }}</td>
+                <td>{{ registro[2] }}</td>
+                
+                
+                <td>
+    <form id="eliminar-form-{{ registro[0].id }}" action="{{ url_for('form_bp.eliminar_tabla1_route', id=registro[0].id) }}" method="post" style="display:inline;" onsubmit="return confirmarEliminacion({{ registro[0].id }})">
+        <input type="submit" value="Eliminar">
+    </form>
+</td>
+                
+                
+                    
+                    
+                    
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+</body>
+
+</html>
