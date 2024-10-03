@@ -2,7 +2,7 @@ from flask import Flask
 from http import HTTPStatus
 from config import config  # Importa las configuraciones desde config.py
 from .extensions import db, migrate  # Importa las extensiones (SQLAlchemy, Migrate)
-from .routes import user_bp  # Importa el blueprint de rutas principales
+from .routes import user_bp, form_bp  # Importa el blueprint de rutas principales
 
 def create_app(env_name='development'):
     
@@ -19,5 +19,6 @@ def create_app(env_name='development'):
     
     # Registrar las rutas
     app.register_blueprint(user_bp)
+    app.register_blueprint(form_bp, url_prefix='/formulario')
     
     return app
